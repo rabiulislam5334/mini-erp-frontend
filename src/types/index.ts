@@ -67,10 +67,17 @@ export interface ICustomer {
   _id: string;
   name: string;
   phone: string;
-  email?: string;
-  address?: string;
+  email: string;
+  address: string;
+  createdAt: string;
 }
 
+export interface ICustomerFormValues {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+}
 export interface ISaleItem {
   product: IProduct;
   quantity: number;
