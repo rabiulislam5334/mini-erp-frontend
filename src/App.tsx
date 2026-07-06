@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardLayout from "./layouts/DashboardLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
+import ProductsPage from "./pages/ProductsPage";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard/products" element={<ProductsPage />} />
           </Route>
         </Route>
 

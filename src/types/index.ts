@@ -53,6 +53,16 @@ export interface IProduct {
   createdAt: string;
 }
 
+export interface IProductFormValues {
+  name: string;
+  sku: string;
+  category: string;
+  purchasePrice: number;
+  sellingPrice: number;
+  stockQuantity: number;
+  image?: FileList;
+}
+
 export interface ICustomer {
   _id: string;
   name: string;
@@ -76,11 +86,16 @@ export interface ISale {
   createdAt: string;
 }
 
-// ✅ নতুন যোগ করা হয়েছে
+//
 export interface IDashboardStats {
   totalProducts: number;
   totalCustomers: number;
   totalSales: number;
   totalRevenue: number;
-  lowStockProducts: IProduct[];
+  lowStockProducts: {
+    _id: string;
+    name: string;
+    sku: string;
+    stockQuantity: number;
+  }[];
 }

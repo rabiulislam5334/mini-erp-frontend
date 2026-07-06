@@ -1,118 +1,140 @@
-import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "../lib/apiClient";
-import { Package, Users, TrendingUp, AlertTriangle } from "lucide-react";
+import {
+  Package,
+  Users,
+  Receipt,
+  Wallet,
+  AlertTriangle,
+  CheckCircle2,
+} from "lucide-react";
 import { motion } from "framer-motion";
-import type { IDashboardStats } from "../types";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { Loader } from "@/components/ui/loader";
+
+const statCards = [
+  { key: "totalProducts", label: "Total products", icon: Package },
+  { key: "totalCustomers", label: "Total customers", icon: Users },
+  { key: "totalSales", label: "Total sales", icon: Receipt },
+  { key: "totalRevenue", label: "Total revenue", icon: Wallet, prefix: "৳ " },
+] as const;
 
 export default function DashboardPage() {
-  const { data: stats, isLoading } = useQuery<IDashboardStats>({
-    queryKey: ["dashboard"],
-    queryFn: () =>
-      apiClient.get("/dashboard/stats").then((res) => res.data.data),
-  });
+  const { data, isLoading, isError } = useDashboardStats();
 
-  const statCards = [
-    {
-      title: "Total Products",
-      value: stats?.totalProducts || 0,
-      icon: Package,
-      color: "blue",
-    },
-    {
-      title: "Total Customers",
-      value: stats?.totalCustomers || 0,
-      icon: Users,
-      color: "green",
-    },
-    {
-      title: "Total Sales",
-      value: stats?.totalSales || 0,
-      icon: TrendingUp,
-      color: "purple",
-    },
-    {
-      title: "Total Revenue",
-      value: `৳${stats?.totalRevenue?.toLocaleString() || 0}`,
-      icon: TrendingUp,
-      color: "emerald",
-    },
-  ];
+  if (isLoading) {
+    return <Loader label="Loading dashboard stats..." />;
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 py-16 text-center border border-dashed border-border/60 rounded-xl bg-card/30">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+          <AlertTriangle className="h-5 w-5" />
+        </div>
+        <p className="text-sm font-medium text-muted-foreground">
+          Couldn't load dashboard stats. Please check your connection.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+    <div className="space-y-8 p-1">
+      {/* Header Section */}
+      <div>
+        <h1 className="font-sans text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           Dashboard
         </h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">
+          A real-time overview of your enterprise operations.
+        </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => (
+      {/* Stats Grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((card, i) => (
           <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
+            key={card.key}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800"
+            transition={{ duration: 0.4, delay: i * 0.05, ease: "easeOut" }}
+            className="group relative rounded-xl border border-border/60 bg-card/50 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-md"
           >
             <div className="flex items-center justify-between">
-              <stat.icon className="w-8 h-8 text-blue-600" />
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                {stat.value}
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                {card.label}
+              </span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/10 transition-colors group-hover:bg-primary/20">
+                <card.icon className="h-4 w-4 text-primary" />
               </div>
             </div>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">
-              {stat.title}
+            <p className="mt-4 font-sans text-3xl font-semibold tracking-tight text-foreground tabular-nums">
+              {"prefix" in card ? card.prefix : ""}
+              {data[card.key].toLocaleString()}
             </p>
           </motion.div>
         ))}
       </div>
 
-      {/* Low Stock Products */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <AlertTriangle className="text-amber-500" />
-          <h2 className="text-xl font-semibold">Low Stock Products</h2>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b dark:border-gray-700">
-                <th className="text-left py-4 px-4">Product</th>
-                <th className="text-left py-4 px-4">SKU</th>
-                <th className="text-left py-4 px-4">Stock</th>
-                <th className="text-left py-4 px-4">Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {stats?.lowStockProducts?.map((product: any) => (
-                <tr
-                  key={product._id}
-                  className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-                >
-                  <td className="py-4 px-4 flex items-center gap-3">
-                    <img
-                      src={product.image}
-                      alt=""
-                      className="w-10 h-10 object-cover rounded-lg"
-                    />
-                    {product.name}
-                  </td>
-                  <td className="py-4 px-4 font-mono text-sm">{product.sku}</td>
-                  <td className="py-4 px-4">
-                    <span className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900/50 rounded-full text-sm font-medium">
-                      {product.stockQuantity}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4">{product.category}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Low Stock Status Section */}
+      {data.lowStockProducts.length > 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 backdrop-blur-sm"
+        >
+          <div className="flex items-center gap-2.5 border-b border-destructive/10 pb-4">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-destructive/10 text-destructive">
+              <AlertTriangle className="h-4 w-4" />
+            </div>
+            <div>
+              <h2 className="font-sans text-sm font-semibold tracking-tight text-destructive">
+                Low Stock Alert
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Items requiring immediate inventory replenishment.
+              </p>
+            </div>
+          </div>
+          <ul className="mt-2 divide-y divide-destructive/10">
+            {data.lowStockProducts.map((p) => (
+              <li
+                key={p._id}
+                className="flex items-center justify-between py-3.5 text-sm transition-colors hover:bg-destructive/5 px-2 rounded-md"
+              >
+                <span className="font-medium text-foreground">
+                  {p.name}{" "}
+                  <span className="text-xs font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded ml-1.5">
+                    {p.sku}
+                  </span>
+                </span>
+                <span className="font-semibold text-destructive bg-destructive/10 px-2.5 py-0.5 rounded-full text-xs">
+                  {p.stockQuantity} left
+                </span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      ) : (
+        /* Healthy Inventory (Empty State) */
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="rounded-xl border border-dashed border-border/80 bg-card/30 p-10 text-center backdrop-blur-sm flex flex-col items-center justify-center gap-2"
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
+            <CheckCircle2 className="h-5 w-5" />
+          </div>
+          <h3 className="font-sans text-sm font-semibold text-foreground mt-2">
+            Inventory Healthy
+          </h3>
+          <p className="max-w-xs text-xs text-muted-foreground">
+            All product stocks are at optimal levels. No low-stock warnings at
+            the moment.
+          </p>
+        </motion.div>
+      )}
     </div>
   );
 }

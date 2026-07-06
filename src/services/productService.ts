@@ -1,0 +1,45 @@
+import type { IApiResponse, IProduct, IProductFormValues } from "@/types";
+import { apiClient } from "../lib/apiClient";
+
+export const getProducts = async (): Promise<IProduct[]> => {
+  const { data } = await apiClient.get<IApiResponse<IProduct[]>>("/products");
+  return data.data;
+};
+
+const buildProductFormData = (values: IProductFormValues) => {
+  const formData = new FormData();
+  formData.append("name", values.name);
+  formData.append("sku", values.sku);
+  formData.append("category", values.category);
+  formData.append("purchasePrice", String(values.purchasePrice));
+  formData.append("sellingPrice", String(values.sellingPrice));
+  formData.append("stockQuantity", String(values.stockQuantity));
+  if (values.image && values.image.length > 0) {
+    formData.append("image", values.image[0]);
+  }
+  return formData;
+};
+
+export const createProduct = async (values: IProductFormValues) => {
+  const formData = buildProductFormData(values);
+  const { data } = await apiClient.post<IApiResponse<IProduct>>(
+    "/products",
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+  return data.data;
+};
+
+export const updateProduct = async (id: string, values: IProductFormValues) => {
+  const formData = buildProductFormData(values);
+  const { data } = await apiClient.patch<IApiResponse<IProduct>>(
+    `/products/${id}`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+  return data.data;
+};
+
+export const deleteProduct = async (id: string) => {
+  await apiClient.delete(`/products/${id}`);
+};
