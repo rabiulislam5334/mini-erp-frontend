@@ -7,6 +7,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import ProductsPage from "./pages/ProductsPage";
 import CustomersPage from "./pages/CustomersPage";
+import SalesPage from "./pages/SalesPage";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/dashboard/products" element={<ProductsPage />} />
             <Route path="/dashboard/customers" element={<CustomersPage />} />
+            <Route path="/dashboard/sales" element={<SalesPage />} />
           </Route>
         </Route>
 

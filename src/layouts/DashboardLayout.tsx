@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
   DropdownMenuLabel,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuthStore } from "@/store/authStore";
@@ -125,7 +126,7 @@ export default function DashboardLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const initials = user?.name
@@ -215,23 +216,23 @@ export default function DashboardLayout() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 rounded-full border border-border px-2 py-1 text-sm">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                    {initials}
-                  </span>
-                  <span className="hidden sm:inline text-sm font-medium">
-                    {user?.name}
-                  </span>
-                </button>
+              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-border px-2 py-1 text-sm outline-none">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                  {initials}
+                </span>
+                <span className="hidden sm:inline text-sm font-medium">
+                  {user?.name}
+                </span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>
-                  <p className="text-sm font-medium">{user?.name}</p>
-                  <p className="text-xs font-normal capitalize text-muted-foreground">
-                    {user?.role}
-                  </p>
-                </DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    <p className="text-xs font-normal capitalize text-muted-foreground">
+                      {user?.role}
+                    </p>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}

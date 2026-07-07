@@ -79,7 +79,7 @@ export interface ICustomerFormValues {
   address: string;
 }
 export interface ISaleItem {
-  product: IProduct;
+  product: { _id: string; name: string; sku: string };
   quantity: number;
   unitPrice: number;
   subtotal: number;
@@ -87,10 +87,17 @@ export interface ISaleItem {
 
 export interface ISale {
   _id: string;
-  customer: ICustomer;
+  customer: { _id: string; name: string; phone: string; email: string };
   items: ISaleItem[];
   grandTotal: number;
+  createdBy: string;
   createdAt: string;
+  updatedAt: string;
+}
+
+export interface ISaleFormValues {
+  customer: string;
+  items: { product: string; quantity: number }[];
 }
 
 //
