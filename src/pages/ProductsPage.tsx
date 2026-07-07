@@ -22,9 +22,13 @@ import {
 import { Loader } from "@/components/ui/loader";
 import { ProductFormDialog } from "@/components/products/ProductFormDialog";
 import { useProducts, useDeleteProduct } from "@/hooks/useProducts";
+import { useAuthStore } from "@/store/authStore";
 import type { IProduct } from "@/types";
 
 export default function ProductsPage() {
+  const { user } = useAuthStore();
+  const canManage = user?.role === "admin" || user?.role === "manager";
+
   const { data: products, isLoading, isError } = useProducts();
   const deleteProduct = useDeleteProduct();
 
@@ -61,10 +65,12 @@ export default function ProductsPage() {
             Manage your inventory catalog.
           </p>
         </div>
-        <Button onClick={openCreateForm}>
-          <Plus className="mr-1.5 h-4 w-4" />
-          Add product
-        </Button>
+        {canManage && (
+          <Button onClick={openCreateForm}>
+            <Plus className="mr-1.5 h-4 w-4" />
+            Add product
+          </Button>
+        )}
       </div>
 
       <div className="mt-6 rounded-xl border border-border">
@@ -85,7 +91,9 @@ export default function ProductsPage() {
                 <TableHead className="text-right">Purchase</TableHead>
                 <TableHead className="text-right">Selling</TableHead>
                 <TableHead className="text-right">Stock</TableHead>
-                <TableHead className="w-24 text-right">Actions</TableHead>
+                {canManage && (
+                  <TableHead className="w-24 text-right">Actions</TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -126,24 +134,26 @@ export default function ProductsPage() {
                   >
                     {product.stockQuantity}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openEditForm(product)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setDeleteTarget(product)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </TableCell>
+                  {canManage && (
+                    <TableCell>
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEditForm(product)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setDeleteTarget(product)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -157,11 +167,13 @@ export default function ProductsPage() {
         )}
       </div>
 
-      <ProductFormDialog
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        product={editingProduct}
-      />
+      {canManage && (
+        <ProductFormDialog
+          open={formOpen}
+          onOpenChange={setFormOpen}
+          product={editingProduct}
+        />
+      )}
 
       <AlertDialog
         open={!!deleteTarget}

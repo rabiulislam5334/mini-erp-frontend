@@ -113,3 +113,18 @@ export interface IDashboardStats {
     stockQuantity: number;
   }[];
 }
+export interface IUserListItem {
+  _id: string;
+  name: string;
+  email: string;
+  role: TUserRole;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface IUserFormValues {
+  name: string;
+  email: string;
+  password: string;
+  role: "manager" | "employee";
+}

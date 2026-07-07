@@ -12,7 +12,9 @@ import {
   LogOut,
   ChevronsLeft,
   ChevronsRight,
+  Shield,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,11 +29,15 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const baseNavItems = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Products", path: "/dashboard/products", icon: Package },
   { label: "Customers", path: "/dashboard/customers", icon: Users },
   { label: "Sales", path: "/dashboard/sales", icon: Receipt },
+];
+
+const adminNavItems = [
+  { label: "Team", path: "/dashboard/users", icon: Shield },
 ];
 
 interface SidebarContentProps {
@@ -47,6 +53,9 @@ function SidebarContent({
   user,
   onLogout,
 }: SidebarContentProps) {
+  const navItems =
+    user?.role === "admin" ? [...baseNavItems, ...adminNavItems] : baseNavItems;
+
   return (
     <>
       <div

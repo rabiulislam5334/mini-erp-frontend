@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ProductsPage from "./pages/ProductsPage";
 import CustomersPage from "./pages/CustomersPage";
 import SalesPage from "./pages/SalesPage";
+import UsersPage from "./pages/UsersPage";
 
 export default function App() {
   return (
@@ -22,6 +23,12 @@ export default function App() {
             <Route path="/dashboard/products" element={<ProductsPage />} />
             <Route path="/dashboard/customers" element={<CustomersPage />} />
             <Route path="/dashboard/sales" element={<SalesPage />} />
+          </Route>
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard/users" element={<UsersPage />} />
           </Route>
         </Route>
 
