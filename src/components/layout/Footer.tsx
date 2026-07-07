@@ -1,5 +1,4 @@
 import { LayoutGrid } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export function Footer() {
   return (
@@ -11,7 +10,7 @@ export function Footer() {
             <LayoutGrid className="h-3.5 w-3.5 text-primary" />
           </div>
           <span className="font-medium">
-            Apex<span className="text-foreground">ERP</span> — Built for modern
+            Apex<span className="text-foreground"> ERP</span> — Built for modern
             inventory management
           </span>
         </div>
