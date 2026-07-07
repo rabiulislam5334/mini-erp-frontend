@@ -29,8 +29,10 @@ interface SaleFormDialogProps {
 }
 
 export function SaleFormDialog({ open, onOpenChange }: SaleFormDialogProps) {
-  const { data: products } = useProducts();
-  const { data: customers } = useCustomers();
+  const { data: productsData } = useProducts({ limit: 1000 });
+  const products = productsData?.data;
+  const { data: customersData } = useCustomers({ limit: 1000 });
+  const customers = customersData?.data;
   const createSale = useCreateSale();
 
   const {

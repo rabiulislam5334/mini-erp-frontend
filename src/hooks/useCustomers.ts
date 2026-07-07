@@ -8,10 +8,13 @@ import {
 } from "../services/customerService";
 import type { ICustomerFormValues } from "@/types";
 
-export const useCustomers = () => {
+export const useCustomers = (
+  params: { searchTerm?: string; page?: number; limit?: number } = {},
+) => {
   return useQuery({
-    queryKey: ["customers"],
-    queryFn: getCustomers,
+    queryKey: ["customers", params],
+    queryFn: () => getCustomers(params),
+    placeholderData: (previousData) => previousData,
   });
 };
 

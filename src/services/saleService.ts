@@ -1,9 +1,19 @@
-import type { IApiResponse, ISale, ISaleFormValues } from "@/types";
 import { apiClient } from "../lib/apiClient";
+import type {
+  IApiResponse,
+  ISale,
+  ISaleFormValues,
+  IPaginationMeta,
+} from "../types";
 
-export const getSales = async (): Promise<ISale[]> => {
-  const { data } = await apiClient.get<IApiResponse<ISale[]>>("/sales");
-  return data.data;
+type SaleListResponse = IApiResponse<ISale[]> & { meta: IPaginationMeta };
+
+export const getSales = async (params: {
+  page?: number;
+  limit?: number;
+}): Promise<{ data: ISale[]; meta: IPaginationMeta }> => {
+  const response = await apiClient.get<SaleListResponse>("/sales", { params });
+  return { data: response.data.data, meta: response.data.meta };
 };
 
 export const createSale = async (values: ISaleFormValues) => {

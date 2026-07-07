@@ -1,9 +1,24 @@
-import type { IApiResponse, ICustomer, ICustomerFormValues } from "@/types";
 import { apiClient } from "../lib/apiClient";
+import type {
+  IApiResponse,
+  ICustomer,
+  ICustomerFormValues,
+  IPaginationMeta,
+} from "../types";
 
-export const getCustomers = async (): Promise<ICustomer[]> => {
-  const { data } = await apiClient.get<IApiResponse<ICustomer[]>>("/customers");
-  return data.data;
+type CustomerListResponse = IApiResponse<ICustomer[]> & {
+  meta: IPaginationMeta;
+};
+
+export const getCustomers = async (params: {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+}): Promise<{ data: ICustomer[]; meta: IPaginationMeta }> => {
+  const response = await apiClient.get<CustomerListResponse>("/customers", {
+    params,
+  });
+  return { data: response.data.data, meta: response.data.meta };
 };
 
 export const createCustomer = async (values: ICustomerFormValues) => {
