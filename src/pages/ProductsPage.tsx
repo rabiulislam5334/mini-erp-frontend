@@ -11,6 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -36,12 +43,24 @@ import type { IProduct } from "@/types";
 
 const LIMIT = 5;
 
+const SORT_OPTIONS = [
+  { value: "Sort", label: "Newest first" },
+  { value: "createdAt", label: "Oldest first" },
+  { value: "name", label: "Name (A–Z)" },
+  { value: "-name", label: "Name (Z–A)" },
+  { value: "sellingPrice", label: "Price (Low–High)" },
+  { value: "-sellingPrice", label: "Price (High–Low)" },
+  { value: "stockQuantity", label: "Stock (Low–High)" },
+  { value: "-stockQuantity", label: "Stock (High–Low)" },
+];
+
 export default function ProductsPage() {
   const { user } = useAuthStore();
   const canManage = user?.role === "admin" || user?.role === "manager";
 
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sort, setSort] = useState("Sort");
   const [page, setPage] = useState(1);
 
   // Debounce search input -> searchTerm (400ms), and reset to page 1 on new search
@@ -55,6 +74,7 @@ export default function ProductsPage() {
 
   const { data, isLoading, isError, isPlaceholderData } = useProducts({
     searchTerm: searchTerm || undefined,
+    sort,
     page,
     limit: LIMIT,
   });
@@ -84,6 +104,10 @@ export default function ProductsPage() {
       });
     }
   };
+  const handleSortChange = (value: unknown) => {
+    setSort(value as string);
+    setPage(1);
+  };
 
   return (
     <div>
@@ -104,14 +128,29 @@ export default function ProductsPage() {
         )}
       </div>
 
-      <div className="relative mt-4 max-w-sm">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="Search by name, SKU, or category..."
-          className="pl-9"
-        />
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <div className="relative max-w-sm flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search by name, SKU, or category..."
+            className="pl-9"
+          />
+        </div>
+
+        <Select value={sort} onValueChange={handleSortChange}>
+          <SelectTrigger className="w-full sm:w-[190px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="mt-4 rounded-xl border border-border">

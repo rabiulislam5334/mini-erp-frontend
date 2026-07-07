@@ -10,6 +10,8 @@ import type { IProductFormValues } from "@/types";
 
 export const useProducts = (params: {
   searchTerm?: string;
+  category?: string;
+  sort?: string;
   page?: number;
   limit?: number;
 }) => {

@@ -10,6 +10,8 @@ type ProductListResponse = IApiResponse<IProduct[]> & { meta: IPaginationMeta };
 
 export const getProducts = async (params: {
   searchTerm?: string;
+  category?: string;
+  sort?: string;
   page?: number;
   limit?: number;
 }): Promise<{ data: IProduct[]; meta: IPaginationMeta }> => {

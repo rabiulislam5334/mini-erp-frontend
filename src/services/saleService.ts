@@ -9,11 +9,19 @@ import type {
 type SaleListResponse = IApiResponse<ISale[]> & { meta: IPaginationMeta };
 
 export const getSales = async (params: {
+  searchTerm?: string;
+  sort?: string;
   page?: number;
   limit?: number;
 }): Promise<{ data: ISale[]; meta: IPaginationMeta }> => {
-  const response = await apiClient.get<SaleListResponse>("/sales", { params });
-  return { data: response.data.data, meta: response.data.meta };
+  const response = await apiClient.get<SaleListResponse>("/sales", {
+    params,
+  });
+
+  return {
+    data: response.data.data,
+    meta: response.data.meta,
+  };
 };
 
 export const createSale = async (values: ISaleFormValues) => {

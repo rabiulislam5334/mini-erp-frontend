@@ -1,32 +1,127 @@
-# React + TypeScript + Vite
+# Mini ERP — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Modern, responsive **Inventory & Sales Management System** frontend built with React, TypeScript, and Tailwind CSS. Part of a full-stack MERN ERP solution.
 
-Currently, two official plugins are available:
+**Live URL**: [Frontend Live Link](https://mini-erp-frontend-kappa.vercel.app)  
+**Backend API**: `https://mini-erp-backend-kappa.vercel.app/api/v1`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Authentication** — Login with JWT + Protected Routes
+- **Role-Based Access Control** — Admin, Manager, Employee
+- **Dashboard** — Statistics cards + Low stock alerts
+- **Products Management** — Full CRUD with image upload, search & pagination
+- **Sales Management** — Create sales with multiple products, auto total calculation
+- **Customers Management** — View & manage customer records
+- **Team Management** — Admin can add team members (Manager/Employee)
+- **Modern UI** — Built with Shadcn/UI + Tailwind CSS (beautiful & responsive)
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🛠 Tech Stack
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+| Technology              | Purpose                          |
+|-------------------------|----------------------------------|
+| React 18 + TypeScript   | Core framework                   |
+| React Router v6         | Routing & Protected Routes       |
+| TanStack Query          | Data fetching & caching          |
+| Zustand                 | Lightweight auth state management|
+| Tailwind CSS + Shadcn/UI| Styling & Component Library      |
+| Lucide React            | Icons                            |
+| Vite                    | Build tool                       |
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 📁 Project Structure
+
+```bash
+src/
+├── components/          # Reusable UI components
+│   ├── ui/              # Shadcn components
+│   ├── products/        # Product specific components
+│   ├── sales/           # Sale form dialog etc.
+│   └── users/           # User management
+├── hooks/               # Custom hooks (useProducts, useSales, etc.)
+├── pages/               # Main pages (Dashboard, Products, Sales, Users)
+├── services/            # API service functions
+├── store/               # Zustand stores (authStore)
+├── lib/                 # API client (axios instance)
+├── types/               # TypeScript interfaces
+├── routes/              # ProtectedRoute component
+└── utils/               # Helper functions
+
+🚀 Getting Started
+Prerequisites
+
+Node.js (v18+)
+Backend API running (or use deployed URL)
+
+Installation
+Bashgit clone https://github.com/rabiulislam5334/mini-erp-frontend.git
+cd mini-erp-frontend
+npm install
+Environment Variables
+Create .env file in root:
+env VITE_API_BASE_URL=https://mini-erp-backend-kappa.vercel.app/api/v1
+Run the Application
+Bashnpm run dev
+Open http://localhost:5173
+
+🔑 Default Admin Login
+
+Email: rakib@gmail.com
+Password: admin1234
+
+
+📋 Available Pages & Features
+
+PageFeaturesAccessible ByLoginJWT AuthenticationPublicDashboardStats cards + Low stock productsAll rolesProductsCRUD, Image upload, Search, PaginationAll rolesSalesCreate sale (multi-product), HistoryAll rolesCustomersManage customersAdmin + ManagerUsersAdd team members (Admin only)Admin only
+
+🎨 UI/UX Highlights
+
+Fully responsive (Mobile + Desktop)
+Beautiful data tables with sorting & pagination
+Loading spinners & error states
+Toast notifications
+Clean, professional design using Shadcn/UI
+
+
+🔧 Scripts
+Bashnpm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
+
+📌 Key Implementation Details
+
+TanStack Query for efficient data fetching & caching
+Form validation using Zod (sync with backend)
+ProtectedRoute component with role checking
+Automatic stock validation on sales
+Image preview before upload
+Consistent error handling
+
+
+🚀 Deployment
+Deployed on Vercel (Frontend)
+Connected with Backend API via environment variable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

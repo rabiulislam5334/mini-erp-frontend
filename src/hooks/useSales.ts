@@ -3,7 +3,14 @@ import toast from "react-hot-toast";
 import { createSale, getSales } from "../services/saleService";
 import type { ISaleFormValues } from "@/types";
 
-export const useSales = (params: { page?: number; limit?: number } = {}) => {
+export const useSales = (
+  params: {
+    searchTerm?: string;
+    sort?: string;
+    page?: number;
+    limit?: number;
+  } = {},
+) => {
   return useQuery({
     queryKey: ["sales", params],
     queryFn: () => getSales(params),

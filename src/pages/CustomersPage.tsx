@@ -33,7 +33,7 @@ import { useCustomers, useDeleteCustomer } from "@/hooks/useCustomers";
 import { useAuthStore } from "@/store/authStore";
 import type { ICustomer } from "@/types";
 
-const LIMIT = 10;
+const LIMIT = 5;
 
 export default function CustomersPage() {
   const { user } = useAuthStore();
