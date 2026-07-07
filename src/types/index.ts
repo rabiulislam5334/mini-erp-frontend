@@ -128,3 +128,9 @@ export interface IUserFormValues {
   password: string;
   role: "manager" | "employee";
 }
+export interface IPaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}

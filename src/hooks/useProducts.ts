@@ -8,10 +8,15 @@ import {
 } from "../services/productService";
 import type { IProductFormValues } from "@/types";
 
-export const useProducts = () => {
+export const useProducts = (params: {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+}) => {
   return useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
+    queryKey: ["products", params],
+    queryFn: () => getProducts(params),
+    placeholderData: (previousData) => previousData,
   });
 };
 

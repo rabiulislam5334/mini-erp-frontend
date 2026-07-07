@@ -1,9 +1,22 @@
-import type { IApiResponse, IProduct, IProductFormValues } from "@/types";
 import { apiClient } from "../lib/apiClient";
+import type {
+  IApiResponse,
+  IPaginationMeta,
+  IProduct,
+  IProductFormValues,
+} from "../types";
 
-export const getProducts = async (): Promise<IProduct[]> => {
-  const { data } = await apiClient.get<IApiResponse<IProduct[]>>("/products");
-  return data.data;
+type ProductListResponse = IApiResponse<IProduct[]> & { meta: IPaginationMeta };
+
+export const getProducts = async (params: {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+}): Promise<{ data: IProduct[]; meta: IPaginationMeta }> => {
+  const response = await apiClient.get<ProductListResponse>("/products", {
+    params,
+  });
+  return { data: response.data.data, meta: response.data.meta };
 };
 
 const buildProductFormData = (values: IProductFormValues) => {
